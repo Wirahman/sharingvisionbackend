@@ -24,7 +24,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 |
 */
 $config['base_url'] = '';
-
+if (stripos($_SERVER["REQUEST_URI"],'/api/') === FALSE) {
+    $config['csrf_protection']  = FALSE;
+}else{ 
+    $config['csrf_protection']  = FALSE; 
+}
 /*
 |--------------------------------------------------------------------------
 | Index File
