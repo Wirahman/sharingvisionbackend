@@ -5,3 +5,4 @@ fungsi /article berbentuk get juga(https://localhost/sharingvision/api/article1?
 4. Untuk api ubah menjadi ubahArticle(https://localhost/sharingvision/api/ubahArticle)(Post)
 5. function untuk hapus menjadi hapusArticle(https://localhost/sharingvision/api/hapusArticle)(Post)
 6. Untuk status dalam post saya menggunakan "trash" bukan “thrash”
+7. Menggunakan Codeigniter 3
