@@ -31,10 +31,20 @@ class Model_posts extends CI_Model {
 		return $query->result();
 	}
         
-    public function get_all(){
-        $this->load->database();
+    public function get_all($status){
+        $this->load->database(); 
+		$this->db->where('status', $status);
 		$query = $this->db->get($this->table_name);
 		return $query->result();	
+	}
+
+	public function count_all($status){
+        $this->load->database(); 
+        $this->db->select('COUNT(*) as count');
+		$this->db->where('status', $status);
+		$query = $this->db->get($this->table_name);
+		return $query->result();	
+
 	}
         
     public function update($id,$data) {
@@ -57,6 +67,23 @@ class Model_posts extends CI_Model {
 		$query = $this->db->get($this->table_name);
 		return $query ? $query->result() : NULL;	
 	}
+
+    public function get_by_params($params){
+        $query  = $this->db->get_where($this->table_name,$params);
+        return $query->result();
+    }
+
+	public function get_by_params_limit($params, $limit, $offset){
+        $this->db->order_by('id', 'Desc');
+		$query  = $this->db->get_where($this->table_name,$params, $limit, $offset);
+		return $query->result();
+	}
+	
+    public function count_by_params(){
+        $query  = $this->db->get_where($this->table_name,$params);
+        return $query->result();
+    }
+
 
         
 }

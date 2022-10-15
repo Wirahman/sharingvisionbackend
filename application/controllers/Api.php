@@ -10,7 +10,7 @@ class Api extends RestController {
         // Construct the parent class
         parent::__construct();
         header('Access-Control-Allow-Origin: *');
-        header("Access-Control-Allow-Headers: X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Request-Method, authorization,blubuk-api,content-type");
+        header("Access-Control-Allow-Headers: X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Request-Method, authorization,sharing-api,content-type");
         header("Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, DELETE");
         header( 'Access-Control-Allow-Credentials: true' );
         header( 'Access-Control-Max-Age: 86400' );
@@ -31,9 +31,9 @@ class Api extends RestController {
         $category = json_decode($request_json)->category;
         $status = json_decode($request_json)->status;
 
-        if(strlen($title) > 20){
-            if(strlen($content) > 200){
-                if(strlen($category) > 3){
+        if(strlen($title) >= 20){
+            if(strlen($content) >= 200){
+                if(strlen($category) >= 3){
                     if($status == 'publish' || $status == 'draft' || $status == 'trash'){
                         $data['title'] = $title;
                         $data['content'] = $content;
@@ -111,9 +111,9 @@ class Api extends RestController {
         $category = json_decode($request_json)->category;
         $status = json_decode($request_json)->status;
 
-        if(strlen($title) > 20){
-            if(strlen($content) > 200){
-                if(strlen($category) > 3){
+        if(strlen($title) >= 20){
+            if(strlen($content) >= 200){
+                if(strlen($category) >= 3){
                     if($status == 'publish' || $status == 'draft' || $status == 'trash'){
                         $data['title'] = $title;
                         $data['content'] = $content;
@@ -155,17 +155,13 @@ class Api extends RestController {
 
     }
 
-    public function hapusArticle_post()
+    public function hapusArticle_delete($id)
     {
-        header('Content-type: application/json');
-        $request_json = file_get_contents('php://input');
-        
-        $id = json_decode($request_json)->id;
-
-        $resp = $this->Model_posts->delete($id);
+        $data['status'] = 'trash';
+        $resp = $this->Model_posts->update($id, $data);
         if($resp){
             $status_api = TRUE;
-            $pesan_api = "Artikel baru sudah dihapus";
+            $pesan_api = "Artikel sudah dihapus";
             $kode_api = 200;
         }else{
             $status_api = TRUE;
@@ -175,6 +171,24 @@ class Api extends RestController {
         return $this->response(array('status' => $status_api, "pesan_api" => $pesan_api), $kode_api);
 
     }
+
+
+
+    // Function tambahan untuk FE
+    public function semuaArticle_get(){
+        $status = $this->get('status');
+        $database = $this->Model_posts->get_all($status);
+        $databaseCount = $this->Model_posts->count_all($status);
+
+        // $database = $this->Model_posts->get_all();
+        $articlePost = $database;
+        
+        $status_api = TRUE;
+        $pesan_api = "Daftar Artikel";
+        $kode_api = 200;
+        return $this->response(array('status' => $status_api, "pesan_api" => $pesan_api, "article" => $articlePost, "jumlahData" => $databaseCount), $kode_api);
+    }
+
     
 
 }
